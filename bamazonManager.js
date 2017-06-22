@@ -34,7 +34,6 @@ function displayAllItems() {
 };
 
 function displayLowInventory() {
-	console.log('low inventory');
 	connection.query('SELECT * FROM products WHERE stock_quantity < 5', function(queryerr, res) {
 		if(queryerr){
 			throw queryerr;
@@ -70,8 +69,6 @@ function addToInventory() {
 	]).then(function(answers) {
 		var id = parseFloat(answers.id);
 		var newStock = parseFloat(answers.stockAdd);
-		console.log(newStock);
-		console.log(isNaN(newStock));
 		if(Number.isInteger(newStock) == false || newStock < 0) {
 			console.log('Please enter a positive integer for the quantity to add')
 		} else{
@@ -84,18 +81,13 @@ function addToInventory() {
 					console.log('Bad ID choice, be sure to pick a valid ID');
 				} else {
 					var previousStock = Number(res[0].stock_quantity);
-					console.log(previousStock);
-					console.log(isNaN(previousStock));
-					console.log(newStock);
-					console.log(isNaN(newStock));
 					var updatedStock = previousStock+newStock;
-					console.log('New Stock is' + updatedStock + ' and ' + isNaN(newStock));
 					//UPDATE to new inventory number by adding what was just added to preivous, aka res.stock_quantity
 					connection.query('UPDATE products SET stock_quantity=? WHERE item_id=?',[updatedStock, id], function(query2err, resp) {
 						if(query2err){
 							throw query2err;
 						}
-						console.log(resp);
+						console.log('We now have ' + res[0].stock_quantity + ' ' + res[0].product_name + '!');
 					});
 				}
 			});
@@ -142,7 +134,7 @@ function addNewProduct() {
 					if(queryerr){
 						throw queryerr;
 					}
-					console.log(res);
+					console.log('Just add ' + answers.stock + ' ' + answers.productName + ' to the inventory!');
 				})
 		}
 	});
@@ -166,7 +158,6 @@ connection.connect( function(err) {
 						displayAllItems();
 						break;
 					case 'View Low Inventory':
-						console.log('running li');
 						displayLowInventory();
 						break;
 					case 'Add to Inventory':

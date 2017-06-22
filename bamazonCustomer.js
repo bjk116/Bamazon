@@ -53,7 +53,7 @@ function getInput(products){
 					if(queryerr){
 						throw queryerr;
 					}
-					console.log('Updated Stock Quantity of ' + products[id-1][0] + ' to ' + (stock-products[id-1][3]));
+					console.log('Updated Stock Quantity of ' + products[id-1][0] + ' to ' + (products[id-1][3]-stock));
 				});
 			}
 		}
