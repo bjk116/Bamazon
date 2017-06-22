@@ -46,7 +46,15 @@ function getInput(products){
 				console.log('Sorry, we don\'t have as many ' + products[id-1][0] + ' as you need.');
 			} else {
 				//we have a ok ID, and we have enough item in stock
+				//put a wrapper around the price to limit it to 2 decimals
 				console.log('You just bought ' + stock + ' ' + products[id-1][0] + '\'s for $' + (stock*products[id-1][2]));
+				//UPDATE STOCK QUANTITY
+				connection.query('UPDATE products SET stock_quantity=? WHERE item_id=?', [products[id-1][3]-stock, id] , function(queryerr, res) {
+					if(queryerr){
+						throw queryerr;
+					}
+					console.log('Updated Stock Quantity of ' + products[id-1][0] + ' to ' + (stock-products[id-1][3]));
+				});
 			}
 		}
 	});
@@ -72,18 +80,9 @@ connection.connect( function (err) {
 	if(err){
 		throw err;
 	}
+
 	console.log('Connected to Bamazon');
 
-	//to handle Async of displayAllItems() since it calls MySQL, probably better way. look into promise
-	try{
-		displayAllItems();
-		console.log('');
-		console.log('');
-		console.log('');
-	} catch (ex) {
-		console.log(ex);
-	}
-
-
+	displayAllItems();
 
 });
